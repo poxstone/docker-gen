@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vscode-deployment
+  namespace: default
+spec:
+
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: vscode-pod
+  template:
+    metadata:
+      labels:
+        app: vscode-pod
+    spec:
+      containers: 
+      - image: "poxstone/code-server:dc2"
+        name: vscode-container
+        resources:
+          requests:
+            cpu: 200m
+            memory: 500Mi
+        env:
+        - name: PASSWORD
+          value: 'MyPASS'
+        - name: SUDO_PASSWORD
+          value: 'MyPASS'
+        args: [
+                '--auth', 'password',
+                '--bind-addr', '0.0.0.0:8443',
+                #'--extensions-dir', '/home/coder/volume/.vscode/extensions',
+                #'--user-data-dir', '/home/coder/volume/Code',
+                #'--config', '/home/coder/volume/config.yaml',
+               ]
+        volumeMounts:
+        - name: vscode-volume
+          mountPath: /home/coder
+        - name: dockersock
+          mountPath: "/var/run/docker.sock"
+        ports:
+        - containerPort: 8443
+          name: https
+          protocol: TCP
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        - containerPort: 8080
+          name: app1
+          protocol: TCP
+        - containerPort: 5000
+          name: app2
+          protocol: TCP
+        - containerPort: 3000
+          name: app3
+          protocol: TCP
+        - containerPort: 9090
+          name: app4
+          protocol: TCP
+      volumes:
+      - name: vscode-volume
+        persistentVolumeClaim:
+          claimName: vscode-volume-claim
+      # for docker in docker
+      - name: dockersock
+        hostPath:
+          path: /var/run/docker.sock 
+      # set usergroup permissions volume
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        

@@ -1,0 +1,18 @@
+FROM "poxstone/code-server:latest"
+USER root
+ENV VS_USER='coder'
+ENV VS_USER_CODE='1004'
+ENV VS_GROUP_CODE='1005'
+
+# the UID is same than user owner volume. Customize "1000" with show docker UID owner folder
+RUN chown -R $VS_USER:$VS_USER /home/$VS_USER
+RUN usermod -u $VS_USER_CODE $VS_USER && \
+    groupmod -g $VS_GROUP_CODE $VS_USER
+USER $VS_USER
+
+EXPOSE 8443
+EXPOSE 8080
+EXPOSE 8081
+
+ENTRYPOINT ["dumb-init", "code-server"]
+

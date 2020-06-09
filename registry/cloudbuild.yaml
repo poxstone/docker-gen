@@ -1,0 +1,5 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [ 'build', '-t', 'gcr.io/pivotal-cursor-149604/quickstart-image', '.' ]
+images:
+  - 'gcr.io/pivotal-cursor-149604/quickstart-image'

@@ -1,0 +1,8 @@
+*.pyc
+lib/*
+.DS_Store
+.idea/
+*.sw[mnop]
+.code
+__pycache__/*
+

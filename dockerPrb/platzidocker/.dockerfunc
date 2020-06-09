@@ -1,0 +1,115 @@
+relies_on(){
+    local containers=$@
+
+    for container in $containers; do
+        local state=$(docker inspect --format "{{.State.Running}}" $container 2>/dev/null)
+
+        if [[ "$state" == "false" ]] || [[ "$state" == "" ]]; then
+            echo "$container is not running, starting it for you."
+            $container
+        fi
+    done
+}
+
+del_stopped(){
+    local name=$1
+    local state=$(docker inspect --format "{{.State.Running}}" $name 2>/dev/null)
+
+    if [[ "$state" == "false" ]]; then
+        docker rm $name
+    fi
+}
+
+libreoffice() {
+    del_stopped libreoffice
+
+    docker run -d \
+        -v /etc/localtime:/etc/localtime:ro \
+        -v /tmp/.X11-unix:/tmp/.X11-unix \
+        -e DISPLAY=unix$DISPLAY \
+        -v $HOME/slides:/root/slides \
+        -e GDK_SCALE \
+        -e GDK_DPI_SCALE \
+        --name libreoffice \
+        jess/libreoffice
+}
+
+spotify() {
+    del_stopped spotify
+
+    docker run -d \
+        -v /etc/localtime:/etc/localtime:ro \
+        -v /tmp/.X11-unix:/tmp/.X11-unix \
+        -e DISPLAY=unix$DISPLAY \
+        -e QT_DEVICE_PIXEL_RATIO \
+        --group-add audio \
+        --name spotify \
+        --device /dev/snd \
+        jess/spotify
+}
+
+firefox(){
+    del_stopped firefox
+
+    docker run -d \
+        --memory 2gb \
+        --net host \
+        --cpuset-cpus 0 \
+        -v /etc/localtime:/etc/localtime:ro \
+        -v /tmp/.X11-unix:/tmp/.X11-unix \
+        -v $HOME/.firefox/cache:/root/.cache/mozilla \
+        -v $HOME/.firefox/mozilla:/root/.mozilla \
+        -v $HOME/Downloads:/root/Downloads \
+        -v $HOME/Pictures:/root/Pictures \
+        -v $HOME/Torrents:/root/Torrents \
+        -v /run/user/$UID/pulse/native:/var/run/pulse \
+        -e PULSE_SERVER=unix:/var/run/pulse \
+        -v /home/marcos/.config/pulse/cookie:/tmp/pulse/cookie \
+        -e PULSE_COOKIE=/tmp/pulse/cookie \
+        -e DISPLAY=unix$DISPLAY \
+        -e GDK_SCALE \
+        -e GDK_DPI_SCALE \
+        --device /dev/dri \
+        --name firefox \
+        jess/firefox "$@"
+
+    # exit current shell
+    exit 0
+}
+
+eclipse() {
+del_stopped elipse
+
+docker run -ti --rm \
+           -e DISPLAY=$DISPLAY \
+           -v /tmp/.X11-unix:/tmp/.X11-unix \
+           -v `pwd`:/workspace \
+           --name eclipse \
+           fgrehm/eclipse:v4.4.1
+}
+
+
+atom() {
+del_stopped atom
+
+docker run -ti --rm \
+           -e DISPLAY=$DISPLAY \
+           -v /tmp/.X11-unix:/tmp/.X11-unix \
+           --name atom \
+           jess/atom
+}
+
+steam(){
+    del_stopped steam
+
+    docker run -d \
+        -v /etc/localtime:/etc/localtime:ro \
+        -v /etc/machine-id:/etc/machine-id:ro \
+        -v /var/run/dbus:/var/run/dbus \
+        -v /tmp/.X11-unix:/tmp/.X11-unix \
+        -v $HOME/.steam:/home/steam \
+        -e DISPLAY=unix$DISPLAY \
+        --device /dev/dri \
+        --name steam --privileged \
+        tianon/steam
+}
