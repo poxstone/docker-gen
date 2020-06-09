@@ -59,8 +59,13 @@ spec:
           protocol: TCP
       volumes:
       - name: vscode-volume
-        persistentVolumeClaim:
-          claimName: vscode-volume-claim
+        # This GCE PD must already exist.
+        gcePersistentDisk:
+          pdName: developer-pvc
+          fsType: ext4
+        #- name: vscode-volume
+        #  persistentVolumeClaim:
+        #    claimName: vscode-volume-claim
       # for docker in docker
       - name: dockersock
         hostPath:
