@@ -1,12 +1,4 @@
 # vs coder server
-- vs coder server
-- python 2.7, 3.7
-- java 1.8
-- node 12
-- go 1.10.4
-- gcloud 247 and tools
-- others: git, vim, curl, nmap, deb builds, ssh, tcpdump, whois, yarn
-- ***Autocreate:*** `./auto_prepare.sh`
 
 ## Docker origin
 ```bash
@@ -18,7 +10,6 @@ docker build -t poxstone/vscode -f ./code-server/Dockerfile ./code-server/;
 ```
 
 ## docker build
-
 ˊˊˊbash
 docker build -t poxstone/code-server:latest ./;
 ˊˊˊ

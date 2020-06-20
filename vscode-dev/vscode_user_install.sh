@@ -2,6 +2,61 @@
 
 cd ~;
 
+function addCodeConfig {
+  mkdir -p ~/.local/share/code-server/User;
+  cat <<EOF > ~/.local/share/code-server/User/settings.json
+{
+    "breadcrumbs.enabled": false,
+    "debug.console.fontSize": 10,
+    "debug.internalConsoleOptions": "neverOpen",
+    "debug.node.autoAttach": "off",
+    "debug.openDebug": "neverOpen",
+    "editor.fontSize": 10,
+    "editor.minimap.enabled": false,
+    "editor.minimap.maxColumn": 80,
+    "editor.renderControlCharacters": true,
+    "editor.renderWhitespace": "all",
+    "editor.rulers": [80,120],
+    "editor.suggestSelection": "first",
+    "explorer.confirmDelete": false,
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 60000,
+    "git.ignoreLegacyWarning": true,
+    "keyboard.dispatch": "keyCode",
+    "markdown.preview.fontSize": 10,
+    "python.jediEnabled": false,
+    "terminal.integrated.fontSize": 11,
+    "terminal.integrated.rendererType": "dom",
+    "workbench.colorCustomizations": {},
+    "workbench.colorTheme": "Material Theme High Contrast",
+    "workbench.iconTheme": "material-icon-theme",
+    "workbench.startupEditor": "newUntitledFile",
+    "workbench.statusBar.visible": true,
+    "files.watcherExclude": {
+        "**/bin/**": true,
+        "**/lib/**": true,
+        "**/virtual_env/**": true
+    },
+    "explorer.confirmDragAndDrop": false,
+    "python.dataScience.askForKernelRestart": false,
+}
+EOF
+
+cat <<EOF > ~/.local/share/code-server/User/keybindings.json
+// Place your key bindings in this file to override the defaultsauto[]
+[
+    {
+        "key": "ctrl+shift+alt+5",
+        "command": "workbench.action.terminal.new"
+    },
+    {
+        "key": "ctrl+shift+c",
+        "command": "-workbench.action.terminal.new"
+    }
+]
+EOF
+}
+
 function addBashrc {
   touch .bashrc;
   cat <<EOF > ~/.bashrc
@@ -181,7 +236,7 @@ function addGCloud {
     app-engine-go \
     app-engine-python app-engine-python-extras \
     bq \
-    bigtable
+    bigtable \
     cbt \
     cloud-build-local \
     datalab \
@@ -189,6 +244,7 @@ function addGCloud {
     kubectl -q;
 }
 
+#addCodeConfig
 #addBashrc;
 #vimConfig;
 #addNode "v12";
