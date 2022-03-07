@@ -4,7 +4,7 @@
 
 ## Build
 ```bash
-docker build . -t gcloud-sdk;
+docker build . -t docker.io/poxstone/gcloud-sdk;
 ```
 
 ## Run
@@ -18,7 +18,7 @@ docker run -it --rm \
   -v $HOME/.ssh:/home/cloudsdk/.ssh/ \
   -v $HOME/.config/gcloud:/home/cloudsdk/.config/gcloud \
   -v $(pwd):/home/cloudsdk/project/ \
-  gcloud-sdk bash;
+  docker.io/poxstone/gcloud-sdk bash;
 ```
 
 ## GCLOUD auth
